@@ -18,6 +18,7 @@ import { BlockchainNetworkExplorerProvider } from './explorer/BlockchainNetworkE
 import { addConnection } from './commands/addConnectionCommand';
 import { deleteConnection } from './commands/deleteConnectionCommand';
 import { addConnectionIdentity } from './commands/addConnectionIdentityCommand';
+import { createFabricProject } from './commands/createFabricProjectCommand';
 
 let blockchainNetworkExplorerProvider;
 
@@ -33,6 +34,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('blockchainExplorer.deleteConnectionEntry', (connection) => deleteConnection(connection));
     vscode.commands.registerCommand('blockchainExplorer.addConnectionIdentityEntry', (connection) => addConnectionIdentity(connection));
     vscode.commands.registerCommand('blockchainExplorer.testEntry', (data) => blockchainNetworkExplorerProvider.test(data));
+    vscode.commands.registerCommand('createFabricProjectEntry', createFabricProject);
 
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e) => {
 
