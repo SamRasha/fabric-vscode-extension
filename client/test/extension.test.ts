@@ -55,8 +55,8 @@ describe('Extension Tests', () => {
             'blockchainExplorer.deleteConnectionEntry',
             'blockchainExplorer.addConnectionIdentityEntry',
             'blockchainExplorer.testEntry']);
-        
-        //Don't need this if createFabricProject is renamed
+
+        // Don't need this if createFabricProject is renamed
         const createFabricCommand = allCommands.filter((command) => {
             return command.startsWith('createFabric');
         });

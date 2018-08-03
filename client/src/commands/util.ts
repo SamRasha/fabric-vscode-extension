@@ -13,42 +13,43 @@
 */
 'use strict';
 import * as vscode from 'vscode';
-const exec = require('child-process-promise').exec;
+import * as childProcessPromise from 'child-process-promise';
+const exec = childProcessPromise.exec;
 
 export class Util {
 
     static showConnectionQuickPickBox(prompt: string): Thenable<string | undefined> {
         const connections: Array<any> = vscode.workspace.getConfiguration().get('fabric.connections');
-    
+
         const quickPickOptions = {
             ignoreFocusOut: false,
             canPickMany: false,
             placeHolder: prompt
         };
-    
+
         const connectionNames: Array<string> = [];
-    
+
         connections.forEach((connection) => {
             connectionNames.push(connection.name);
         });
-    
+
         return vscode.window.showQuickPick(connectionNames, quickPickOptions);
     }
-    
+
     static showInputBox(question: string): Thenable<string | undefined> {
         const inputBoxOptions = {
             prompt: question
         };
-    
+
         return vscode.window.showInputBox(inputBoxOptions);
     }
-    
-    //Send shell command
-    static async sendCommand(command: string, cwd?: string): Promise<string>{
-        const result = await exec(command, {cwd:cwd});
+
+    // Send shell command
+    static async sendCommand(command: string, cwd?: string): Promise<string> {
+        const result = await exec(command, {cwd: cwd});
+        console.log('DEBUG: Util: printing some stdout and stderr info:');
+        console.log(result.stdout);
+        console.log(result.stderr);
         return result.stdout.trim();
-    };
+    }
 }
-
-
-

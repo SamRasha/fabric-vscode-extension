@@ -97,7 +97,8 @@
       },
       {
         "command": "createFabricProjectEntry",
-        "title": "Create Fabric Project"
+        "title": "Create Fabric Project",
+        "category": "Blockchain"
       },
       {
         "command": "blockchainExplorer.testEntry",
@@ -147,12 +148,12 @@
     "lint": "npm run tslint 'src/**/*.ts' 'test/**/*.test.ts'"
   },
   "devDependencies": {
+    "@types/chai": "4.1.4",
     "@types/glob": "5.0.35",
     "@types/mocha": "5.2.5",
     "@types/node": "10.5.4",
     "@types/sinon": "5.0.1",
     "@types/sinon-chai": "3.2.0",
-    "@types/chai": "4.1.4",
     "angular-tslint-rules": "1.5.0",
     "chai": "4.1.2",
     "decache": "4.4.0",

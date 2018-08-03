@@ -35,8 +35,8 @@ describe('Command Utility Function Tests', () => {
 
     it('should send a shell command', async () => {
 
-        let rootPath = path.dirname(__dirname);
-        let uri: vscode.Uri = vscode.Uri.file(path.join(rootPath, '../../test'));
+        const rootPath = path.dirname(__dirname);
+        const uri: vscode.Uri = vscode.Uri.file(path.join(rootPath, '../../test'));
         const command = await Util.sendCommand('echo Hyperledgendary', uri.fsPath);
         command.should.equal('Hyperledgendary');
 

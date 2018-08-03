@@ -23,7 +23,7 @@ import * as fs from 'fs';
 
 // Defines a Mocha test suite to group tests of similar kind together
 describe('CreateFabricProjectCommand', () => {
-    //suite variables
+    // suite variables
     let mySandBox;
     let sendCommandStub;
     let errorSpy;
@@ -51,35 +51,41 @@ describe('CreateFabricProjectCommand', () => {
     it('should start a fabric project', async () => {
         mySandBox.restore();
         await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
+        fs.mkdirSync(uri.fsPath);
+
         openDialogStub = mySandBox.stub(vscode.window, 'showOpenDialog');
         openDialogStub.resolves(uriArr);
-        
+
         await vscode.commands.executeCommand('createFabricProjectEntry');
-        //check package.json has been created
+        // check package.json has been created
         const pathToCheck = path.join(rootPath, '../../test/data/fabricProject/package.json');
-        fs.existsSync(pathToCheck).should.be.true;
+        chai.assert(fs.existsSync(pathToCheck), 'No package.json found, looking here:' + pathToCheck);
 
     }).timeout(7000);
 
-    it('should show errors if node modules are missing', async () => {
+    it('should show error if npm is not installed', async () => {
         await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
 
         // npm not installed
         sendCommandStub.onCall(0).rejects();
         await vscode.commands.executeCommand('createFabricProjectEntry');
         errorSpy.should.have.been.calledWith('npm is required before creating a fabric project');
+    });
 
-        //yo not installed and not wanted
-        sendCommandStub.onCall(1).rejects({message :'npm ERR'});
+    it('should show error is yo is not installed and not wanted', async () => {
+        await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
+
+        // yo not installed and not wanted
+        sendCommandStub.onCall(0).rejects({message : 'npm ERR'});
         quickPickStub.resolves('no');
         await vscode.commands.executeCommand('createFabricProjectEntry');
         errorSpy.should.have.been.calledWith('npm modules: yo and generator-fabric are required before creating a fabric project');
     });
 
-    it('should show error message if installing modules fail', async () => {
+    it('should show error message if generator-fabric fails to install', async () => {
         await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
 
-        //generator-fabric not installed and wanted but fails to install
+        // generator-fabric not installed and wanted but fails to install
         sendCommandStub.onCall(0).resolves();
         sendCommandStub.onCall(1).rejects();
         quickPickStub.resolves('yes');
@@ -87,27 +93,31 @@ describe('CreateFabricProjectCommand', () => {
         sendCommandStub.onCall(2).rejects();
         await vscode.commands.executeCommand('createFabricProjectEntry');
         errorSpy.should.have.been.calledWith('Issue installing generator-fabric module');
+    });
 
-        //yo not installed and wanted but fails to install
-        sendCommandStub.onCall(3).rejects({message :'npm ERR'});
+    it('should show error message if yo fails to install', async () => {
+        await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
+
+        // yo not installed and wanted but fails to install
+        sendCommandStub.onCall(0).rejects({message : 'npm ERR'});
         quickPickStub.resolves('yes');
         openDialogStub.resolves(uriArr);
-        sendCommandStub.onCall(4).rejects();
+        sendCommandStub.onCall(1).rejects();
         await vscode.commands.executeCommand('createFabricProjectEntry');
         errorSpy.should.have.been.calledWith('Issue installing yo node module');
     });
 
     it('should show error message if we fail to create a smart contract', async () => {
-        //generator-fabric and yo not installed and wanted
-        sendCommandStub.onCall(0).rejects({message :'npm ERR'});
+        // generator-fabric and yo not installed and wanted
+        sendCommandStub.onCall(0).rejects({message : 'npm ERR'});
         quickPickStub.resolves('yes');
         openDialogStub.resolves(uriArr);
-        //npm install works
+        // npm install works
         sendCommandStub.onCall(1).resolves();
         sendCommandStub.onCall(2).resolves();
-        //issue installing yo fabric should show an error
+        // issue installing yo fabric should show an error
         sendCommandStub.onCall(3).rejects();
         await vscode.commands.executeCommand('createFabricProjectEntry');
         errorSpy.should.have.been.calledWith('Issue creating fabric project');
     });
-}); //end of createFabricCommand tests
+}); // end of createFabricCommand tests
