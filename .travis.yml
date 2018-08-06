@@ -13,6 +13,9 @@ before_install:
          sh -e /etc/init.d/xvfb start;
          sleep 3;
         fi
+     - npm install -g yo
+     - npm install -g generator-fabric
+     - npm list -g
 install: |
       ./.travis/install.sh
 script: |
@@ -24,3 +27,5 @@ script: |
 #     on:
 #       all_branches: true
 cache: false
+after_failure:
+     - ls -LR /home/travis/build/caroline-church/fabric-vscode-extension/client/test
