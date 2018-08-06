@@ -61,7 +61,7 @@ describe('CreateFabricProjectCommand', () => {
         const pathToCheck = path.join(rootPath, '../../test/data/fabricProject/package.json');
         chai.assert(fs.existsSync(pathToCheck), 'No package.json found, looking here:' + pathToCheck);
 
-    }).timeout(7000);
+    }).timeout(8000);
 
     it('should show error if npm is not installed', async () => {
         await vscode.extensions.getExtension('hyperledger.hyperledger-fabric').activate();
